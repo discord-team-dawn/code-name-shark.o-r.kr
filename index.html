@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#080808">
+  <meta name="description" content="CODE NAME SHARK — Personal website">
+  <title>CODE NAME SHARK</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+  <style>
+    :root {
+      color-scheme: dark;
+      --background: #080808;
+      --foreground: #f2f2f0;
+      --word-progress: 0;
+      --word-y: 115%;
+      --word-blur: 4px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { background: var(--background); scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--background);
+      color: var(--foreground);
+      font-family: Pretendard, -apple-system, BlinkMacSystemFont, "Segoe UI", "Malgun Gothic", sans-serif;
+      font-synthesis: none;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    a { color: inherit; text-decoration: none; }
+    ::selection { color: #080808; background: #f2f2f0; }
+
+    /* 첫 번째 화면: 중앙 문장만 고정 */
+    .intro-track {
+      position: relative;
+      height: 175svh;
+      background: var(--background);
+    }
+    .intro-pin {
+      position: sticky;
+      top: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100svh;
+      min-height: 560px;
+      overflow: hidden;
+    }
+    .intro-inner {
+      width: min(1080px, calc(100% - clamp(22px, 5vw, 72px) * 2));
+      margin: 0 auto;
+    }
+    .intro-title {
+      display: flex;
+      align-items: baseline;
+      flex-wrap: nowrap;
+      width: max-content;
+      max-width: 100%;
+      margin: 0;
+      color: var(--foreground);
+      font-size: clamp(29px, 6.1vw, 76px);
+      font-weight: 570;
+      line-height: 1.22;
+      letter-spacing: -.065em;
+      white-space: nowrap;
+      word-break: keep-all;
+    }
+    .word-slot {
+      position: relative;
+      display: inline-block;
+      flex: 0 0 4.45em;
+      width: 4.45em;
+      height: 1.12em;
+      margin: 0 .10em 0 .13em;
+      overflow: hidden;
+      text-align: center;
+      vertical-align: baseline;
+      letter-spacing: -.055em;
+      isolation: isolate;
+    }
+    .word-placeholder, .word-entering {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      line-height: 1.1;
+    }
+    .word-placeholder {
+      color: #74746f;
+      font-size: .9em;
+      font-weight: 400;
+      letter-spacing: .12em;
+      opacity: calc(1 - var(--word-progress));
+    }
+    .word-entering {
+      color: var(--foreground);
+      font-weight: 570;
+      opacity: var(--word-progress);
+      transform: translate3d(0, var(--word-y), 0);
+      filter: blur(var(--word-blur));
+      will-change: transform, opacity, filter;
+    }
+
+    /* 틈새 간격 조절 영역 */
+    .next-section {
+      min-height: 100svh;
+      display: flex;
+      align-items: center;
+      background: var(--background);
+      padding: 180px 0 80px 0; /* 이 부분의 위쪽 패딩 값을 늘리면 틈새가 벌어집니다 */
+    }
+    .next-inner {
+      width: min(1080px, calc(100% - clamp(22px, 5vw, 72px) * 2));
+      margin: 0 auto;
+    }
+    .intro-name {
+      margin: 0 0 clamp(40px, 6vh, 60px) 2px;
+      color: var(--foreground);
+      font-size: clamp(32px, 6.2vw, 68px);
+      font-weight: 690;
+      line-height: 1;
+      letter-spacing: -.075em;
+    }
+    .next-page-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 22px;
+      min-height: 48px;
+      margin: 0 0 0 2px;
+      padding: 0 18px;
+      border: 1px solid #454541;
+      border-radius: 2px;
+      color: #e8e8e3;
+      font-size: 11px;
+      font-weight: 550;
+      letter-spacing: .08em;
+      transition: background .2s ease, border-color .2s ease, color .2s ease;
+    }
+    .next-page-button:hover, .next-page-button:focus-visible {
+      border-color: var(--foreground);
+      background: var(--foreground);
+      color: var(--background);
+      outline: none;
+    }
+    .next-page-button span:last-child {
+      display: inline-block;
+      font-size: 15px;
+      transition: transform .2s ease;
+    }
+    .next-page-button:hover span:last-child { transform: translateX(4px); }
+
+    @media (max-width: 720px) {
+      .intro-title { font-size: clamp(25px, 6.5vw, 44px); letter-spacing: -.07em; }
+      .word-slot { flex-basis: 4.3em; width: 4.3em; margin-inline: .06em; }
+      .intro-name { font-size: clamp(30px, 7vw, 48px); }
+    }
+    @media (max-width: 390px) {
+      .intro-title { font-size: 24px; }
+      .word-slot { flex-basis: 4.05em; width: 4.05em; margin-inline: .035em; }
+      .intro-name { font-size: 29px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .next-page-button, .next-page-button span:last-child { transition: none; }
+      .word-entering { filter: none; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="intro-track" id="home" aria-label="소개">
+      <div class="intro-pin">
+        <div class="intro-inner">
+          <h1 class="intro-title">
+            <span>저는</span>
+            <span class="word-slot" aria-label="노력하는">
+              <span class="word-placeholder" aria-hidden="true">____</span>
+              <span class="word-entering">노력하는</span>
+            </span>
+            <span>사람입니다.</span>
+          </h1>
+        </div>
+      </div>
+    </section>
+
+    <section class="next-section" aria-label="프로필">
+      <div class="next-inner">
+        <p class="intro-name">CODE NAME SHARK</p>
+        <a class="next-page-button" href="./Code_Name_Shark_Next.html">
+          <span>다음 페이지</span>
+          <span aria-hidden="true">-&gt;</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (() => {
+      const track = document.querySelector('.intro-track');
+      const root = document.documentElement;
+      let scheduled = false;
+
+      function renderScrollWord() {
+        const distance = Math.max(1, track.offsetHeight - window.innerHeight);
+        const travelled = Math.min(distance, Math.max(0, -track.getBoundingClientRect().top));
+        const progress = Math.max(0, Math.min(1, travelled / (distance * 0.58)));
+        root.style.setProperty('--word-progress', progress.toFixed(4));
+        root.style.setProperty('--word-y', `${((1 - progress) * 115).toFixed(2)}%`);
+        root.style.setProperty('--word-blur', `${((1 - progress) * 4).toFixed(2)}px`);
+        scheduled = false;
+      }
+
+      function onScroll() {
+        if (scheduled) return;
+        scheduled = true;
+        window.requestAnimationFrame(renderScrollWord);
+      }
+
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll);
+      renderScrollWord();
+    })();
+  </script>
+</body>
+</html>
+```[cite: 1]
