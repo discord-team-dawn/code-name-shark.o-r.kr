@@ -1,56 +1,14 @@
 [
   {
-    "title": "basecord",
-    "subtitle": "Desktop Application",
-    "status": "기획 · UI 프로토타입",
-    "role": "개인 프로젝트",
-    "description": "개발자가 소스 코드를 공유하고 탐색·다운로드할 수 있도록 기획한 Windows 데스크톱 플랫폼입니다.",
+    "title": "빈칸",
+    "subtitle": "빈칸",
+    "status": "빈칸",
+    "role": "빈칸",
+    "description": "빈칸",
     "points": [
-      "코드 게시글, 검색, 상세 페이지 및 다운로드 흐름 설계",
-      "Discord 로그인과 사용자 프로필 연동 구상",
-      "Electron 기반 Windows 앱 구조 설계"
+      "빈칸",
+      "빈칸"
     ],
-    "technologies": ["JavaScript", "Electron", "Discord OAuth2"]
-  },
-  {
-    "title": "UNTITLED RPG VALUE LIST",
-    "subtitle": "Web Application",
-    "status": "웹 프로젝트",
-    "role": "개인 프로젝트",
-    "description": "게임 아이템의 시세 정보를 확인하고 검색·분류할 수 있도록 만든 웹 기반 시세 리스트입니다.",
-    "points": [
-      "아이템 검색, 카테고리 및 정렬 기능 구성",
-      "Supabase를 이용한 데이터 연동",
-      "GitHub Pages를 통한 웹사이트 배포"
-    ],
-    "technologies": ["HTML", "CSS", "JavaScript", "Supabase"],
-    "url": "https://discord-team-dawn.github.io/UNTITLED-RPG-VALUE-LIST/"
-  },
-  {
-    "title": "Grant a Wish",
-    "subtitle": "Interactive Website",
-    "status": "웹 프로젝트",
-    "role": "개인 프로젝트",
-    "description": "사용자 기록과 사진을 바탕으로 소원·업적 정보를 표현하는 인터랙티브 웹사이트입니다.",
-    "points": [
-      "로그인·회원가입 UI 및 JSON 기반 기록 구조 구성",
-      "업적과 사진 기록 기능 설계",
-      "업로드한 사진을 배경으로 표시하는 기능 구현"
-    ],
-    "technologies": ["HTML", "CSS", "JavaScript", "JSON"],
-    "url": "https://discord-team-dawn.github.io/Grant-a-wish/Grant-a-wish.html"
-  },
-  {
-    "title": "NPC Dialogue UI",
-    "subtitle": "Web UI Prototype",
-    "status": "UI 프로토타입",
-    "role": "개인 프로젝트",
-    "description": "웹페이지에서 NPC와 대화하는 듯한 장면을 표현하는 대화 인터페이스입니다.",
-    "points": [
-      "한 글자씩 표시되는 대화 텍스트 효과",
-      "선택지 버튼을 통한 링크 이동",
-      "검은 연기와 하단 대화창을 활용한 화면 구성"
-    ],
-    "technologies": ["HTML", "CSS", "JavaScript"]
+    "technologies": ["빈칸"]
   }
 ]
