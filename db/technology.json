@@ -2,40 +2,13 @@
   {
     "category": "Languages",
     "label": "언어",
-    "description": "웹과 프로그램 개발에 사용하는 언어",
+    "description": "웹과 봇 개발에 사용하는 언어",
     "items": [
-      {"name": "JavaScript", "description": "웹 인터랙션 및 프로그램 기능 구현"},
+      {"name": "JavaScript", "description": "웹 인터랙션 및 봇 기능 구현"},
       {"name": "TypeScript", "description": "타입을 활용한 JavaScript 개발"},
+      {"name": "python", "description": "편하고 간단한 봇 개발"},
       {"name": "HTML", "description": "웹 문서 구조 작성"},
       {"name": "CSS", "description": "웹 인터페이스 스타일링"}
-    ]
-  },
-  {
-    "category": "Runtime & Desktop",
-    "label": "실행 환경 · 데스크톱",
-    "description": "프로그램과 데스크톱 앱 제작 기술",
-    "items": [
-      {"name": "Node.js", "description": "JavaScript 실행 환경"},
-      {"name": "Electron", "description": "웹 기술 기반 데스크톱 앱 제작"}
-    ]
-  },
-  {
-    "category": "Discord Development",
-    "label": "Discord 개발",
-    "description": "Discord 서버와 봇 개발 기술",
-    "items": [
-      {"name": "Discord.js", "description": "Discord 봇 및 API 연동"},
-      {"name": "Discord OAuth2", "description": "Discord 계정 인증 흐름 구성"}
-    ]
-  },
-  {
-    "category": "Web & Data",
-    "label": "웹 · 데이터",
-    "description": "웹 프로젝트와 데이터 연동 기술",
-    "items": [
-      {"name": "Supabase", "description": "웹 프로젝트 데이터 연동"},
-      {"name": "Firebase", "description": "인증 및 데이터·파일 저장 구조 검토"},
-      {"name": "GitHub Pages", "description": "정적 웹사이트 배포 및 관리"}
     ]
   }
 ]
