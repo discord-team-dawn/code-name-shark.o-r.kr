@@ -1,27 +1,23 @@
+
 [
   {
     "title": "디스코드 정보부 | BCIA",
-    "subtitle": "커뮤니티(보안)",
+    "subtitle": "Community · Security",
     "period": "진행 중",
-    "role": "정보부(팀장)",
-    "description": "디스코드 서버의 보안을 책임지고, 팀원들을 관리합니다.",
+    "role": "정보부 팀장",
+    "description": "디스코드 서버의 보안 관련 의뢰를 접수하고 검토하며, 팀원들과 함께 문제 해결 및 예방 활동을 진행합니다.",
     "points": [
-      "공지·안내 및 사건 해결",
-      "정보 업데이트와 관리",
-      "https://discord.gg/XUjnv2wRbb"
+      "보안 관련 의뢰 접수 및 사건 대응",
+      "공지·안내 및 주요 정보 업데이트",
+      "정보부 팀원 관리 및 활동 조율"
     ],
-    "tags": ["Discord", "Community", "BCIA"]
-  },
-  {
-    "title": "빈칸",
-    "subtitle": "빈칸",
-    "period": "빈칸",
-    "role": "빈칸",
-    "description": "빈칸",
-    "points": [
-      "빈칸",
-      "빈칸"
+    "tags": [
+      "Discord",
+      "Security",
+      "Community",
+      "BCIA"
     ],
-    "tags": ["빈칸"]
+    "url": "https://discord.gg/XUjnv2wRbb",
+    "linkLabel": "Discord 서버 방문하기"
   }
 ]
