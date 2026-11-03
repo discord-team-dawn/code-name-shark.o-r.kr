@@ -4,11 +4,26 @@
     "label": "언어",
     "description": "웹과 봇 개발에 사용하는 언어",
     "items": [
-      {"name": "JavaScript", "description": "웹 인터랙션 및 봇 기능 구현"},
-      {"name": "TypeScript", "description": "타입을 활용한 JavaScript 개발"},
-      {"name": "python", "description": "편하고 간단한 봇 개발"},
-      {"name": "HTML", "description": "웹 문서 구조 작성"},
-      {"name": "CSS", "description": "웹 인터페이스 스타일링"}
+      {
+        "name": "JavaScript",
+        "description": "웹 인터랙션 및 봇 기능 구현"
+      },
+      {
+        "name": "TypeScript",
+        "description": "타입을 활용한 JavaScript 개발"
+      },
+      {
+        "name": "Python",
+        "description": "편하고 간단한 봇 개발"
+      },
+      {
+        "name": "HTML",
+        "description": "웹 문서 구조 작성"
+      },
+      {
+        "name": "CSS",
+        "description": "웹 인터페이스 스타일링"
+      }
     ]
   }
 ]
