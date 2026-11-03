@@ -30,7 +30,7 @@
       background: var(--bg); color: var(--fg);
       font-family: Pretendard, -apple-system, BlinkMacSystemFont, "Segoe UI", "Malgun Gothic", sans-serif;
       font-synthesis: none; text-rendering: optimizeLegibility;
-      -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+      -webkit-font-smoothing: antialiased;
     }
     button, a { font: inherit; }
     a { color: inherit; text-decoration: none; }
@@ -127,14 +127,13 @@
     .intro-card-label { color: #92928a; font-size: 10px; font-weight: 650; letter-spacing: .13em; }
     .intro-card-title { margin: 14px 0 0; color: #f1f1ec; font-size: 18px; font-weight: 650; line-height: 1.4; letter-spacing: -.045em; word-break: keep-all; }
     .intro-card-description { margin: 9px 0 0; color: #aaa9a2; font-size: 13px; line-height: 1.75; word-break: keep-all; }
+
     .language-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
     .language-card { min-height: 205px; padding: 28px 29px; border: 1px solid #2d2d29; border-radius: 13px; background: #111110; transition: border-color .2s ease, transform .2s ease; }
     .language-card:hover { border-color: #55554d; transform: translateY(-3px); }
     .language-kind { color: #92928a; font-size: 10px; font-weight: 650; letter-spacing: .13em; }
     .language-name { margin: 17px 0 0; color: #f5f5f1; font-size: 29px; line-height: 1.2; font-weight: 700; letter-spacing: -.055em; }
     .language-description { margin: 12px 0 0; color: #bdbdb6; font-size: 14px; line-height: 1.8; word-break: keep-all; }
-    .language-uses { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 18px; }
-    .language-use { padding: 6px 9px; border: 1px solid #34342f; border-radius: 5px; color: #c8c8c1; font-size: 11px; }
 
     .load-state { grid-column: 1 / -1; padding: 29px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); color: var(--muted); font-size: 14px; line-height: 1.75; }
     .load-state strong { display: block; margin-bottom: 7px; color: var(--fg); font-size: 16px; }
@@ -143,7 +142,7 @@
     .page-footer { display: flex; justify-content: space-between; gap: 18px; margin-top: 58px; padding-top: 19px; border-top: 1px solid var(--line); color: #66665f; font-size: 11px; line-height: 1.6; }
 
     @media (max-width: 1100px) {
-      .site-shell { width: min(100% - 72px, 1050px); grid-template-columns: 230px minmax(0,1fr); column-gap: 54px; }
+      .site-shell { width: min(calc(100% - 72px), 1050px); grid-template-columns: 230px minmax(0,1fr); column-gap: 54px; }
       .intro-cards { grid-template-columns: 1fr; }
       .intro-card { min-height: auto; }
     }
@@ -267,6 +266,7 @@
 
   <script>
     (() => {
+      // profile/index.html 기준으로 사이트 루트의 db 폴더를 찾습니다.
       const dataFiles = {
         introduction: '../db/introduction.json',
         experience: '../db/activity.json',
@@ -274,30 +274,53 @@
         languages: '../db/technology.json',
         links: '../db/url.json'
       };
+
+      const dataURLs = Object.fromEntries(
+        Object.entries(dataFiles).map(([key, path]) => [key, new URL(path, document.baseURI).href])
+      );
       const cache = new Map();
       const navButtons = [...document.querySelectorAll('.nav-button')];
       const panels = [...document.querySelectorAll('.panel')];
+
       const escapeHTML = value => String(value ?? '').replace(/[&<>"']/g, char => ({
         '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
       })[char]);
+
       const safeURL = value => {
         try {
-          const parsed = new URL(String(value || ''));
+          const parsed = new URL(String(value || ''), window.location.href);
           return ['http:', 'https:'].includes(parsed.protocol) ? parsed.href : '';
-        } catch { return ''; }
+        } catch {
+          return '';
+        }
       };
+
       const tagsHTML = values => Array.isArray(values) && values.length
-        ? `<div class="tag-list">${values.map(value => `<span class="tag">${escapeHTML(value)}</span>`).join('')}</div>` : '';
+        ? `<div class="tag-list">${values.map(value => `<span class="tag">${escapeHTML(value)}</span>`).join('')}</div>`
+        : '';
+
       const pointsHTML = values => Array.isArray(values) && values.length
-        ? `<ul class="card-points">${values.map(value => `<li>${escapeHTML(value)}</li>`).join('')}</ul>` : '';
+        ? `<ul class="card-points">${values.map(value => {
+            const href = safeURL(value);
+            return `<li>${href
+              ? `<a href="${escapeHTML(href)}" target="_blank" rel="noopener noreferrer">${escapeHTML(value)}</a>`
+              : escapeHTML(value)}</li>`;
+          }).join('')}</ul>`
+        : '';
+
       const linkHTML = (url, label = '바로가기') => {
         const href = safeURL(url);
-        return href ? `<div class="card-actions"><a class="card-link" href="${escapeHTML(href)}" target="_blank" rel="noopener noreferrer">${escapeHTML(label)} <span aria-hidden="true">↗</span></a></div>` : '';
+        return href
+          ? `<div class="card-actions"><a class="card-link" href="${escapeHTML(href)}" target="_blank" rel="noopener noreferrer">${escapeHTML(label)} <span aria-hidden="true">↗</span></a></div>`
+          : '';
       };
 
       function renderIntroduction(data) {
-        if (!data || typeof data !== 'object' || Array.isArray(data)) throw new Error('introduction.json 형식이 올바르지 않습니다.');
+        if (!data || typeof data !== 'object' || Array.isArray(data)) {
+          throw new Error('introduction.json은 객체 형식이어야 합니다.');
+        }
         const host = document.getElementById('introduction-content');
+        const cards = Array.isArray(data.cards) ? data.cards : [];
         host.innerHTML = `
           <article class="intro-feature">
             <p class="feature-kicker">A LITTLE ABOUT ME</p>
@@ -306,7 +329,7 @@
             ${data.role ? `<span class="feature-role">${escapeHTML(data.role)}</span>` : ''}
           </article>
           <div class="intro-cards">
-            ${(Array.isArray(data.cards) ? data.cards : []).map(card => `
+            ${cards.map(card => `
               <article class="intro-card">
                 <span class="intro-card-label">${escapeHTML(card.label || 'PROFILE')}</span>
                 <h3 class="intro-card-title">${escapeHTML(card.title || '')}</h3>
@@ -319,10 +342,16 @@
         if (!Array.isArray(items)) throw new Error('activity.json은 배열이어야 합니다.');
         document.querySelector('[data-count="experience"]').textContent = `${items.length} RECORDS`;
         const host = document.getElementById('experience-grid');
-        if (!items.length) { host.innerHTML = '<div class="load-state">등록된 소속 및 경력이 없습니다.</div>'; return; }
+        if (!items.length) {
+          host.innerHTML = '<div class="load-state">등록된 소속 및 경력이 없습니다.</div>';
+          return;
+        }
         host.innerHTML = items.map(item => `
           <article class="info-card">
-            <div class="card-top"><span class="card-category">${escapeHTML(item.organization || item.subtitle || 'EXPERIENCE')}</span><span class="card-status">${escapeHTML(item.period || '기록')}</span></div>
+            <div class="card-top">
+              <span class="card-category">${escapeHTML(item.organization || item.subtitle || 'EXPERIENCE')}</span>
+              <span class="card-status">${escapeHTML(item.period || '기록')}</span>
+            </div>
             <h2 class="card-title">${escapeHTML(item.title || '')}</h2>
             ${(item.position || item.role) ? `<p class="card-role">${escapeHTML(item.position || item.role)}</p>` : ''}
             ${item.description ? `<p class="card-description">${escapeHTML(item.description)}</p>` : ''}
@@ -336,10 +365,16 @@
         if (!Array.isArray(items)) throw new Error('project.json은 배열이어야 합니다.');
         document.querySelector('[data-count="projects"]').textContent = `${items.length} PROJECTS`;
         const host = document.getElementById('projects-grid');
-        if (!items.length) { host.innerHTML = '<div class="load-state">등록된 프로젝트가 없습니다.</div>'; return; }
+        if (!items.length) {
+          host.innerHTML = '<div class="load-state">등록된 프로젝트가 없습니다.</div>';
+          return;
+        }
         host.innerHTML = items.map(item => `
           <article class="info-card">
-            <div class="card-top"><span class="card-category">${escapeHTML(item.category || item.subtitle || 'PROJECT')}</span><span class="card-status">${escapeHTML(item.status || 'PROJECT')}</span></div>
+            <div class="card-top">
+              <span class="card-category">${escapeHTML(item.category || item.subtitle || 'PROJECT')}</span>
+              <span class="card-status">${escapeHTML(item.status || 'PROJECT')}</span>
+            </div>
             <h2 class="card-title">${escapeHTML(item.title || '')}</h2>
             ${item.role ? `<p class="card-role">${escapeHTML(item.role)}</p>` : ''}
             ${item.description ? `<p class="card-description">${escapeHTML(item.description)}</p>` : ''}
@@ -349,12 +384,27 @@
           </article>`).join('');
       }
 
-      function renderLanguages(items) {
-        if (!Array.isArray(items)) throw new Error('technology.json은 배열이어야 합니다.');
-        document.querySelector('[data-count="languages"]').textContent = `${items.length} ITEMS`;
+      function renderLanguages(groups) {
+        if (!Array.isArray(groups)) throw new Error('technology.json은 배열이어야 합니다.');
+
+        // 그룹형(items 포함)과 기존 평면형 JSON을 모두 지원합니다.
+        const languages = groups.flatMap(group => {
+          if (Array.isArray(group.items)) {
+            return group.items.map(item => ({
+              ...item,
+              kind: group.label || group.category || 'LANGUAGE'
+            }));
+          }
+          return [group];
+        });
+
+        document.querySelector('[data-count="languages"]').textContent = `${languages.length} ITEMS`;
         const host = document.getElementById('languages-grid');
-        if (!items.length) { host.innerHTML = '<div class="load-state">등록된 언어가 없습니다.</div>'; return; }
-        host.innerHTML = items.map(item => `
+        if (!languages.length) {
+          host.innerHTML = '<div class="load-state">등록된 언어가 없습니다.</div>';
+          return;
+        }
+        host.innerHTML = languages.map(item => `
           <article class="language-card">
             <span class="language-kind">${escapeHTML(item.kind || item.category || 'LANGUAGE')}</span>
             <h2 class="language-name">${escapeHTML(item.name || item.title || '')}</h2>
@@ -367,10 +417,16 @@
         if (!Array.isArray(items)) throw new Error('url.json은 배열이어야 합니다.');
         document.querySelector('[data-count="links"]').textContent = `${items.length} LINKS`;
         const host = document.getElementById('links-grid');
-        if (!items.length) { host.innerHTML = '<div class="load-state">등록된 관련 링크가 없습니다.</div>'; return; }
+        if (!items.length) {
+          host.innerHTML = '<div class="load-state">등록된 관련 링크가 없습니다.</div>';
+          return;
+        }
         host.innerHTML = items.map(item => `
           <article class="info-card">
-            <div class="card-top"><span class="card-category">${escapeHTML(item.category || 'LINK')}</span>${item.type ? `<span class="card-status">${escapeHTML(item.type)}</span>` : ''}</div>
+            <div class="card-top">
+              <span class="card-category">${escapeHTML(item.category || 'LINK')}</span>
+              ${item.type ? `<span class="card-status">${escapeHTML(item.type)}</span>` : ''}
+            </div>
             <h2 class="card-title">${escapeHTML(item.title || '이름 없는 링크')}</h2>
             ${item.subtitle ? `<p class="card-subtitle">${escapeHTML(item.subtitle)}</p>` : ''}
             ${item.description ? `<p class="card-description">${escapeHTML(item.description)}</p>` : ''}
@@ -398,21 +454,46 @@
         if (cache.has(key) && !retry) return;
         const host = document.getElementById(hostIds[key]);
         host.innerHTML = '<div class="load-state">데이터를 불러오고 있습니다.</div>';
+
         try {
-          const response = await fetch(dataFiles[key], { cache: retry ? 'no-store' : 'default' });
-          if (!response.ok) throw new Error(`HTTP ${response.status}`);
-          const data = await response.json();
+          // 캐시를 사용하지 않아 GitHub Pages의 오래된 JSON 응답을 피합니다.
+          const url = new URL(dataURLs[key]);
+          url.searchParams.set('_', String(Date.now()));
+          const response = await fetch(url.href, {
+            cache: 'no-store',
+            headers: { Accept: 'application/json' }
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status} — ${url.pathname}`);
+          }
+
+          const raw = await response.text();
+          let data;
+          try {
+            data = JSON.parse(raw);
+          } catch (parseError) {
+            throw new Error(`${url.pathname} JSON 문법 오류: ${parseError.message}`);
+          }
+
           renderers[key](data);
           cache.set(key, true);
         } catch (error) {
-          const fileName = dataFiles[key].split('/').pop();
-          host.innerHTML = `<div class="load-state"><strong>${escapeHTML(key)} 데이터를 불러오지 못했습니다.</strong>${escapeHTML(fileName)} 파일의 위치와 JSON 형식을 확인해 주세요.<br><button class="retry-button" type="button" data-retry="${escapeHTML(key)}">다시 불러오기</button></div>`;
+          const fileName = new URL(dataURLs[key]).pathname;
+          host.innerHTML = `
+            <div class="load-state">
+              <strong>${escapeHTML(key)} 데이터를 불러오지 못했습니다.</strong>
+              <span>${escapeHTML(fileName)}</span><br>
+              <span>${escapeHTML(error.message || '네트워크 또는 JSON 형식을 확인해 주세요.')}</span><br>
+              <button class="retry-button" type="button" data-retry="${escapeHTML(key)}">다시 불러오기</button>
+            </div>`;
           host.querySelector('[data-retry]')?.addEventListener('click', () => loadPanel(key, true));
           console.error(`Could not load ${fileName}:`, error);
         }
       }
 
       function switchPanel(key, updateHash = true) {
+        if (!renderers[key]) return;
         navButtons.forEach(button => {
           const selected = button.dataset.view === key;
           button.setAttribute('aria-selected', String(selected));
@@ -437,6 +518,11 @@
           navButtons[next].focus();
           switchPanel(navButtons[next].dataset.view);
         });
+      });
+
+      window.addEventListener('hashchange', () => {
+        const key = location.hash.slice(1);
+        if (renderers[key]) switchPanel(key, false);
       });
 
       const initial = location.hash.slice(1);
