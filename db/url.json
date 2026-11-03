@@ -7,6 +7,11 @@
     "description": "디스코드 정보부 커뮤니티 초대 링크입니다.",
     "url": "https://discord.gg/XUjnv2wRbb",
     "linkLabel": "Discord 서버 참여하기",
-    "tags": ["Discord", "Community", "BCIA", "Security"]
-  },
+    "tags": [
+      "Discord",
+      "Community",
+      "BCIA",
+      "Security"
+    ]
+  }
 ]
